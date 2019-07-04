@@ -1,6 +1,9 @@
 import { Location } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { TestBed, ComponentFixture } from '@angular/core/testing';
+
+import { of } from 'rxjs';
 
 import { HeroDetailComponent } from './hero-detail.component';
 import { HeroService } from './../hero.service';
@@ -25,6 +28,7 @@ describe('HeroDetailComponent', () => {
     mockLocation = jasmine.createSpyObj(['back']);
 
     TestBed.configureTestingModule({
+      imports: [FormsModule],
       declarations: [HeroDetailComponent],
       providers: [
         { provide: ActivatedRoute, useValue: mockActivatedRoute },
@@ -34,5 +38,13 @@ describe('HeroDetailComponent', () => {
     });
 
     fixture = TestBed.createComponent(HeroDetailComponent);
+
+    mockHeroService.getHero.and.returnValue(of({ id: 3, name: 'Derek', strength: 100 }));
+  });
+
+  it('should render hero name in a h2 tag', () => {
+    fixture.detectChanges();
+
+    expect(fixture.nativeElement.querySelector('h2').textContent).toContain('DEREK');
   });
 });
