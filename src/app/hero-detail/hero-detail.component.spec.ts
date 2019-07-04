@@ -1,7 +1,7 @@
 import { Location } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
-import { TestBed, ComponentFixture } from '@angular/core/testing';
+import { TestBed, ComponentFixture, fakeAsync, tick, flush } from '@angular/core/testing';
 
 import { of } from 'rxjs';
 
@@ -48,16 +48,28 @@ describe('HeroDetailComponent', () => {
     expect(fixture.nativeElement.querySelector('h2').textContent).toContain('DEREK');
   });
 
-  it('should call updateHero when save is called', (done) => {
+  // it('should call updateHero when save is called', (done) => {
+  //   mockHeroService.updateHero.and.returnValue(of({}));
+
+  //   fixture.detectChanges();
+
+  //   fixture.componentInstance.save();
+
+  //   setTimeout(() => {
+  //     expect(mockHeroService.updateHero).toHaveBeenCalled();
+  //     done(); // async testing
+  //   }, 500); // issue: unit test should be fast
+  // });
+
+  it('should call updateHero when save is called', fakeAsync(() => {
     mockHeroService.updateHero.and.returnValue(of({}));
 
     fixture.detectChanges();
 
     fixture.componentInstance.save();
+    // tick(500); // zone.js
+    flush(); // look at zone and see if there is any pending test (especially when not sure about time)
 
-    setTimeout(() => {
-      expect(mockHeroService.updateHero).toHaveBeenCalled();
-      done(); // async testing
-    }, 500); // issue: unit test should be fast
-  });
+    expect(mockHeroService.updateHero).toHaveBeenCalled();
+  }));
 });
