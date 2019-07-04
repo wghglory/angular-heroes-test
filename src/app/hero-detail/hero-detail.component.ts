@@ -32,8 +32,16 @@ export class HeroDetailComponent implements OnInit {
     this.location.back();
   }
 
-  save(): void {
-    // mock server slow res
-    setTimeout(() => this.heroService.updateHero(this.hero).subscribe(() => this.goBack()), 500);
+  // save(): void {
+  //   // mock server slow res
+  //   setTimeout(() => this.heroService.updateHero(this.hero).subscribe(() => this.goBack()), 500);
+  // }
+
+  save() {
+    const p = new Promise((resolve) => {
+      this.heroService.updateHero(this.hero).subscribe(() => this.goBack());
+
+      resolve();
+    });
   }
 }
