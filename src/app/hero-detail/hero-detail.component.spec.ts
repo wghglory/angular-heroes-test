@@ -47,4 +47,17 @@ describe('HeroDetailComponent', () => {
 
     expect(fixture.nativeElement.querySelector('h2').textContent).toContain('DEREK');
   });
+
+  it('should call updateHero when save is called', (done) => {
+    mockHeroService.updateHero.and.returnValue(of({}));
+
+    fixture.detectChanges();
+
+    fixture.componentInstance.save();
+
+    setTimeout(() => {
+      expect(mockHeroService.updateHero).toHaveBeenCalled();
+      done(); // async testing
+    }, 500); // issue: unit test should be fast
+  });
 });
