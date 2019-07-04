@@ -19,6 +19,7 @@ describe('HeroesComponent', () => {
   });
 
   describe('delete hero', () => {
+    // this only tests line 36
     it('should remove the indicated hero', () => {
       /* fix TypeError: Cannot read property 'subscribe' of undefined,
         cuz deleteHero should return an Observable,
@@ -33,6 +34,17 @@ describe('HeroesComponent', () => {
       expect(component.heroes.length).toBe(2);
 
       // can expect more
+    });
+
+    // interaction test for line 37, check the api call
+    it('should call deleteHero', () => {
+      mockHeroService.deleteHero.and.returnValue(of(true));
+
+      component.heroes = HEROES;
+
+      component.delete(HEROES[2]);
+
+      expect(mockHeroService.deleteHero).toHaveBeenCalledWith(HEROES[2]);
     });
   });
 });
