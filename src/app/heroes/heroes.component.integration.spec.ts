@@ -1,14 +1,14 @@
-import { HeroComponent } from './../hero/hero.component';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { NO_ERRORS_SCHEMA, Input, Component } from '@angular/core';
+import { By } from '@angular/platform-browser';
 
 import { of } from 'rxjs';
 
 import { HeroService } from '../hero.service';
 
 import { HeroesComponent } from './heroes.component';
+import { HeroComponent } from './../hero/hero.component';
 import { Hero } from '../hero';
-import { By } from '@angular/platform-browser';
 
 describe('HeroesComponent (shallow tests)', () => {
   let fixture: ComponentFixture<HeroesComponent>;
@@ -94,5 +94,21 @@ describe('HeroesComponent (deep tests)', () => {
     for (let i = 0; i < heroComponentDEs.length; i++) {
       expect(heroComponentDEs[i].componentInstance.hero).toEqual(HEROES[i]);
     }
+  });
+
+  it(`should call heroService.deleteHero when Hero component's delete button is clicked`, () => {
+    spyOn(fixture.componentInstance, 'delete'); // watch if delete method gets called
+
+    mockHeroService.getHeroes.and.returnValue(of(HEROES));
+
+    fixture.detectChanges();
+
+    const heroComponentDEs = fixture.debugElement.queryAll(By.directive(HeroComponent));
+
+    heroComponentDEs[0]
+      .query(By.css('button'))
+      .triggerEventHandler('click', { stopPropagation: () => {} }); // dummy
+
+    expect(fixture.componentInstance.delete).toHaveBeenCalledWith(HEROES[0]);
   });
 });
